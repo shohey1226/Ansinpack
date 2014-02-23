@@ -1,0 +1,8 @@
+---
+# file: stage.yml
+- hosts: staging_server
+  remote_user: root
+  roles:
+    - common
+    - ci
+

@@ -1,0 +1,5 @@
+---
+- name: add user and create ssh key  
+  user: name=kamesho generate_ssh_key=yes 
+- name: add my public key to stating host so that no need to type id/pass when login 
+  authorized_key: user=kamesho key="{{ lookup('file', '/Users/kamesho/.ssh/id_rsa.pub') }}" 
