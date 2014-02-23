@@ -1,0 +1,5 @@
+---
+- name: install perl with perlenv 
+  script: perlenv.sh 
+       
+

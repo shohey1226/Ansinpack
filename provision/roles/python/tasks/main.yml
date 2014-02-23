@@ -1,0 +1,5 @@
+---
+- name: install python setuptools
+  yum:  name=python-setuptools state=latest
+- name: install pip
+  command: easy_install pip

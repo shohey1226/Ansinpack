@@ -1,0 +1,15 @@
+---
+- name: install dopy
+  command: pip install dopy
+- name: fetch the pub key file
+  fetch: src=/home/kamesho/.ssh/id_rsa.pub dest=/tmp
+- name: Register pub key for DigitalOcean API
+  #debug: msg="{{ lookup('file', '/tmp/dev.guideroid.com/home/kamesho/.ssh/id_rsa.pub') }}"
+  shell: curl -X GET -i https://api.digitalocean.com/ssh_keys/new/?name=staging_server&ssh_pub_key={{ lookup('file', '/tmp/dev.guideroid.com/home/kamesho/.ssh/id_rsa.pub') }}&client_id={{ lookup('env', 'DIGITALOCEAN_CLIENT_ID') }}&api_key={{ lookup('env', 'DIGITALOCEAN_API_KEY') }}
+
+#- name: Store ssh key to Digital Ocean 
+#  digital_ocean: >
+#    client_id={{ lookup('env', 'DIGITALOCEAN_CLIENT_ID') }}
+#    api_key={{ lookup('env', 'DIGITALOCEAN_API_KEY') }}
+#    ssh_pub_key="{{ lookup('file', '/tmp/dev.guideroid.com/home/kamesho/.ssh/id_rsa.pub') }}" 
+

@@ -1,0 +1,13 @@
+---
+# file: stage.yml
+- hosts: staging_server
+  remote_user: root
+  roles:
+    #- common
+    #- python
+    ### dopy(digitalocean py) needs python
+    #- digitalocean
+    #- perl
+    - packer
+    #- ci
+

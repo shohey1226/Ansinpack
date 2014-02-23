@@ -1,0 +1,10 @@
+---
+- name: check whether packer exists or not
+  shell: "[ -f /usr/local/bin/packer ] && echo 'Found' || echo ''"
+  register: packer_installed
+- name: download packer zip
+  get_url: url="https://dl.bintray.com/mitchellh/packer/0.5.2_linux_386.zip" dest=/tmp/packer.zip
+  when: (not packer_installed.stdout)
+- name: extract to /usr/local/bin
+  shell: unzip -d /usr/local/bin /tmp/packer.zip
+  when: (not packer_installed.stdout)

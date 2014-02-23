@@ -1,3 +1,9 @@
+## How to execute Ansible 
+
+    $ . /.env  # load secret keys which is not uploaded to Guthub
+    $ ansible-playbook -i <inventory> <target yml>
+
+
 ## directory structure
 
 - http://docs.ansible.com/playbooks_best_practices.html
