@@ -21,19 +21,24 @@ ProjInfra is the template to implement Continuous Integration(CI) with Packer an
 ```
  / 
    provision/ # ansible root
+      production # inventory file
       roles/
         perl-5_18_2-system/ # include version and brief explanation
           tasks/main.yml # this is followed ansible best practice
           handlers/
           ...
-      src/ # playbook with version - webapp-0.1.yml
+      src/ 
+        webapp-VERSON.yml # playbook with version - e.g. webapp-0.1.yml
+        ...
       webapp.yml # symlink to src/webapp-VERSION.yml t point to the latest
+      stage.yml # to provision staging sever, which is not done by packer
       ...
     packer/
       # do:DigitalOcean vb:Virtualbox
-      do-webapp.json # symlink to src/webapp-VERSION.json 
+      do-webapp.json # symlink from src/webapp-VERSION.json 
       vb-webapp.json # 
-      src/webapp-VERSION.json
+      src/
+        webapp-VERSION.json
     scripts/
       doman # DigitalOcean MANipulator 
       jenkins.pl # jenkins job to run
