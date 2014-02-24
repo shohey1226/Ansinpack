@@ -1,9 +1,9 @@
-ProjInfra
+Ansipack 
 =========
 
 ## Discription
 
-ProjInfra is the template to implement Continuous Integration(CI) with Packer and Ansible.
+Ansipack is a system design for immutable infrastructure with Packer and Ansible.
 
 ## Flow 
 

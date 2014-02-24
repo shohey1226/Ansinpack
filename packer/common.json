@@ -15,14 +15,14 @@
     },
     {
       "type": "file",
-      "source": "../provision",
+      "source": "../ansible",
       "destination": "/tmp/ansible-local"
     },
     {
       "type": "ansible-local",
-      "playbook_file": "../provision/stage.yml",
+      "playbook_file": "../ansible/stage.yml",
       "role_paths": [
-          "../provision/roles/"
+          "../ansible/roles/"
       ],
       "staging_directory": "/tmp/ansible-local"
     }
