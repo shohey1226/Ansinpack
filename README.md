@@ -18,8 +18,9 @@ ProjInfra is the template to implement Continuous Integration(CI) with Packer an
 
 ## Directory structure
 
-  / 
-    provision/ # ansible root
+```
+ / 
+   provision/ # ansible root
       roles/
         perl-5_18_2-system/ # include version and brief explanation
           tasks/main.yml # this is followed ansible best practice
@@ -37,4 +38,7 @@ ProjInfra is the template to implement Continuous Integration(CI) with Packer an
       doman # DigitalOcean MANipulator 
       jenkins.pl # jenkins job to run
       packer_wrapper.pl # we may need this.. 
+```
+
+
       
