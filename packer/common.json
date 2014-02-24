@@ -7,7 +7,8 @@
     {
       "type": "shell",
       "inline": [
-          "sudo yum install gcc python-devel python-crypto python-pip -y",
+          "sudo yum install gcc python-devel python-crypto python-setuptools -y",
+          "sudo easy_install pip",
           "sudo pip install ansible",
           "mkdir -p /tmp/ansible-local"
       ]
@@ -21,7 +22,7 @@
       "type": "ansible-local",
       "playbook_file": "../provision/stage.yml",
       "role_paths": [
-          "../provision/roles"
+          "../provision/roles/"
       ],
       "staging_directory": "/tmp/ansible-local"
     }
