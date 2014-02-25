@@ -24,7 +24,7 @@
       "type": "ansible-local",
       "playbook_file": "../ansible/stage.yml",
       "role_paths": [
-          "../ansible/roles/"
+          "../ansible/roles/common"
       ],
       "staging_directory": "/tmp/ansible-local"
     }
