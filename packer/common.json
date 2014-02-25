@@ -10,6 +10,8 @@
           "sudo yum install gcc python-devel python-crypto python-setuptools -y",
           "sudo easy_install pip",
           "sudo pip install ansible",
+          "sudo sed -e '/mpz_powm_sec/I s/^/# /' < /usr/lib64/python2.6/site-packages/Crypto/Util/number.py > /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new",
+          "sudo mv -f /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new /usr/lib64/python2.6/site-packages/Crypto/Util/number.py",
           "mkdir -p /tmp/ansible-local"
       ]
     },
