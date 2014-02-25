@@ -22,7 +22,7 @@
     },
     {
       "type": "ansible-local",
-      "playbook_file": "../ansible/stage.yml",
+      "playbook_file": "../ansible/webapp.yml",
       "role_paths": [
           "../ansible/roles/common"
       ],

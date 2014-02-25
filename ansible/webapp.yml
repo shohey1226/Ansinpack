@@ -1,0 +1,12 @@
+---
+- hosts: 127.0.0.1 
+  remote_user: root
+  roles:
+    - common
+    #- python
+    ### dopy(digitalocean py) needs python
+    #- digitalocean
+    #- perl
+    #- packer
+    #- ci
+
