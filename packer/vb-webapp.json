@@ -1,0 +1,43 @@
+{
+  "variables": {
+    "do_api_key": "{{env `DIGITALOCEAN_API_KEY`}}",
+    "do_client_id": "{{env `DIGITALOCEAN_CLIENT_ID`}}"
+  },
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+          "sudo yum install gcc python-devel python-crypto python-setuptools -y",
+          "sudo easy_install pip",
+          "sudo pip install ansible",
+          "sudo sed -e '/mpz_powm_sec/I s/^/# /' < /usr/lib64/python2.6/site-packages/Crypto/Util/number.py > /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new",
+          "sudo mv -f /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new /usr/lib64/python2.6/site-packages/Crypto/Util/number.py",
+          "mkdir -p /tmp/ansible-local"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../ansible",
+      "destination": "/tmp/ansible-local"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "../ansible/webapp.yml",
+      "role_paths": [
+          "../ansible/roles/common"
+      ],
+      "staging_directory": "/tmp/ansible-local"
+    }
+  ],
+  "builders": [
+    {
+      "type": "digitalocean",
+      "api_key": "{{ user `do_api_key` }}",
+      "client_id": "{{ user `do_client_id` }}",
+      "region_id": 6,
+      "image_id": 1646467,
+      "size_id": 66,
+      "snapshot_name": "common"
+    }
+  ]
+}
