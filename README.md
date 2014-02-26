@@ -1,9 +1,16 @@
-Ansipack 
+Ansinpack
 =========
 
-## Discription
+## Description
 
-Ansipack is a system design for immutable infrastructure with Packer and Ansible.
+Ansinpack is a flow to build immutable infrastructure by using Ansible and Packer.
+The name comes from ANSIble aNd PACKer. Also Ansin(安心) means 'feel safe' in Japanese. 
+Hope that this flow provides a package for infrastructure engineer to feel safe:) 
+
+
+## Prerequesite
+
+  * Understanding Github flow
 
 ## Flow 
 
@@ -27,8 +34,7 @@ Ansipack is a system design for immutable infrastructure with Packer and Ansible
           tasks/main.yml # this is followed ansible best practice
           handlers/
           ...
-      src/ 
-        webapp-VERSON.yml # playbook with version - e.g. webapp-0.1.yml
+        adduser-system/
         ...
       webapp.yml # symlink to src/webapp-VERSION.yml t point to the latest
       stage.yml # to provision staging sever, which is not done by packer
@@ -37,8 +43,6 @@ Ansipack is a system design for immutable infrastructure with Packer and Ansible
       # do:DigitalOcean vb:Virtualbox
       do-webapp.json # symlink from src/webapp-VERSION.json 
       vb-webapp.json # 
-      src/
-        webapp-VERSION.json
     scripts/
       doman # DigitalOcean MANipulator 
       jenkins.pl # jenkins job to run
