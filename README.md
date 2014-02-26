@@ -1,7 +1,7 @@
 Ansinpack
 =========
 
-## Discription
+## Description
 
 Ansinpack is a flow to build immutable infrastructure by using Ansible and Packer.
 The name comes from ANSIble aNd PACKer. Also Ansin(安心) means 'feel safe' in Japanese. 
