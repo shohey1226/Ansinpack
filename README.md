@@ -1,18 +1,28 @@
 Ansinpack
 =========
 
-## Description
+## What is this? 
 
 Ansinpack is a flow to build immutable infrastructure by using Ansible and Packer.
 The name comes from ANSIble aNd PACKer. Also Ansin(安心) means 'feel safe' in Japanese. 
 Hope that this flow provides a package for infrastructure engineer to feel safe:) 
 
+## Why we need this?
 
-## Prerequesite
+It's been a while since immutable infrastructure(II) was focused. We have provisioning and image handling tools but there are not many public recipes to deal with II.  Ansinpack can be one of the flow so that people get into II space.
 
-  * Understanding Github flow
+## How this is implemented? 
 
-## Flow 
+### Base concepts
+
+There are the mixture of concept as following:
+
+   * Github flow 
+   * Continuous Integration 
+   * Test Driven Development to infrastructure
+
+
+### Generic Flow 
 
  1. Push Github
  2. Jenkins job runs by Github hook
@@ -23,7 +33,7 @@ Hope that this flow provides a package for infrastructure engineer to feel safe:
  7. severspec to test
  8. With result, leave the image or destroy the image
 
-## Directory structure
+### Directory structure
 
 ```
  / 
