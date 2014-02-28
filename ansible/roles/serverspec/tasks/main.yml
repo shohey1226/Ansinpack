@@ -1,5 +1,8 @@
 ---
 - name: Install ruby 
-  yum: name=ruby,rubygems state=installed
-- name: Install ruby packages
+  yum: name=ruby state=installed
+  yum: name=rubygems state=installed
+- name: Install serverspec
   gem: name=serverspec user_install=no state=latest include_dependencies=yes
+- name: Install rake 
+  gem: name=rake state=latest user_install=no include_dependencies=yes
