@@ -6,3 +6,5 @@
   gem: name=serverspec user_install=no state=latest include_dependencies=yes
 - name: Install rake 
   gem: name=rake state=latest user_install=no include_dependencies=yes
+- name: Install builder 
+  gem: name=builder state=latest user_install=no include_dependencies=yes
