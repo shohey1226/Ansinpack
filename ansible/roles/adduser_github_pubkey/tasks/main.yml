@@ -1,0 +1,5 @@
+---
+- name: add user and create ssh key  
+  user: name=kamesho 
+- name: dowanload pubkey from Github and placed as authorized_keys
+  get_url: url=https://github.com/shohey1226.keys dest=/home/kamesho/.ssh/authorized_keys
