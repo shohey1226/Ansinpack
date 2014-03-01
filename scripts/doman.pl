@@ -35,19 +35,20 @@ my $do = DigitalOcean->new(
     wait_on_events => 1
 );
 
+my $droplets = $do->droplets;
 for my $droplet (@{$droplets}) {
     print Dumper $droplet->name;
 }
 
-if ( defined $create_droplet && 
-
-
-
-if ($verbose == 1){
-    print "hello\n";
-}
-
-sub show_help {
-    print "doman -create_droplet -img_id\n";
-}
+#if ( defined $create_droplet && 
+#
+#
+#
+#if ($verbose == 1){
+#    print "hello\n";
+#}
+#
+#sub show_help {
+#    print "doman -create_droplet -img_id\n";
+#}
 
