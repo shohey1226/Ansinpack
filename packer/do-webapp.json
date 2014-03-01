@@ -24,7 +24,7 @@
       "type": "ansible-local",
       "playbook_file": "../ansible/webapp.yml",
       "role_paths": [
-          "../ansible/roles/common"
+          "../ansible/roles/adduser_github_pubkey"
       ],
       "staging_directory": "/tmp/ansible-local"
     }

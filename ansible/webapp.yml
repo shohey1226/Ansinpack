@@ -2,7 +2,7 @@
 - hosts: 127.0.0.1 
   remote_user: root
   roles:
-    - common
+    - adduser_github_pubkey
     #- python
     ### dopy(digitalocean py) needs python
     #- digitalocean
