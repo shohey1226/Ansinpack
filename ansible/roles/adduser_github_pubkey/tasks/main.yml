@@ -2,4 +2,6 @@
 - name: add user and create ssh key  
   user: name=kamesho 
 - name: dowanload pubkey from Github and placed as authorized_keys
-  get_url: url=https://github.com/shohey1226.keys dest=/home/kamesho/.ssh/authorized_keys
+  get_url: url=https://github.com/shohey1226.keys dest=/tmp/kamesho.authorized_keys
+- name: Create authorized_keys from the file that just downloaded
+  authorized_key: user=kamesho key="{{ lookup('file', '/tmp/kamesho.authorized_keys') }}"
