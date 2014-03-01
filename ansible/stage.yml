@@ -3,8 +3,8 @@
 - hosts: staging_server
   remote_user: root
   roles:
-    #- common
-    - serverspec 
+    - adduser_github_pubkey 
+    #- serverspec 
     #- python
     ### dopy(digitalocean py) needs python
     #- digitalocean
