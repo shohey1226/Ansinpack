@@ -1,3 +1,3 @@
 pwd
 export WORKSPACE; export GIT_BRANCH; export GIT_URL
-scripts/jenkins_job.sh
+bash -x scripts/jenkins_job.sh
