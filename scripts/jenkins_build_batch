@@ -1,12 +1,4 @@
-#!/bin/bash
 # This entry is to be copied to Jenkins's build job
-
-# Move to temp directory
-today=`date +%Y%m%d%H%M%S`
-mkdir -p /tmp/$today
-cd /tmp/$today
-
-# Clone the repo
 echo $GIT_BRANCH | grep 'origin/master' > /dev/null
 if [[ $? -eq 0 ]]
 then
@@ -14,14 +6,14 @@ then
   # for now do nothing
 else
   echo "Working on branch : $GIT_BRANCH"
-  /usr/bin/git clone -b $GIT_BRANCH $GIT_URL
-  /tmp/$today/Ansinpack/scripts/create_images.sh
-  /tmp/$today/Ansinpack/scripts/bring_up_images.sh
-  /tmp/$today/Ansinpack/scripts/run_test.sh
-  if [[ $? -eq 0 ]]
-  then
-    # do nothing
-  else
-    # destroy the
-    /tmp/$today/Ansinpack/scripts/destroy_images.sh
+  #/usr/bin/git clone -b $GIT_BRANCH $GIT_URL
+  #/tmp/$today/Ansinpack/scripts/create_images.sh
+  #/tmp/$today/Ansinpack/scripts/bring_up_images.sh
+  #/tmp/$today/Ansinpack/scripts/run_test.sh
+  #if [[ $? -eq 0 ]]
+  #then
+  #  # do nothing
+  #else
+  #  # destroy the
+  #  /tmp/$today/Ansinpack/scripts/destroy_images.sh
 fi
