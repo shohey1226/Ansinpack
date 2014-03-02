@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+echo $GIT_URL
+echo $GIT_BRANCH
 echo 'test'
 
 ## This script is executed by Jenkins job
