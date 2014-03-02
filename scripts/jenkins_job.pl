@@ -18,14 +18,23 @@ for my $server_type (@server_types){
     my ($type, $version) = split /-/, $server_type;
     print "$type : $version\n";
     if ( -e "packer/do-${type}.json"){
-        my $result = system "$packer packer/do-${type}.json -var 'snapshot_name=${server_type}' ";
+        my $cmd = "$packer validate -var 'snapshot_name=${server_type}' packer/do-${type}.json";
+        print "Execute: $cmd\n";
+        my $result = system $cmd;
+        if ($result == -1){
+            print "Failed to validate pcaker/do-${type}.json\n";
+            exit 1;
+        }
+        $cmd = "$packer build -var 'snapshot_name=${server_type}' packer/do-${type}.json";
+        print "Execute: $cmd\n";
+        $result = system $cmd; 
         if ($result == -1){
             print "Failed to execute packer\n";
             exit 1;
         }
     }
     else{
-        print  "packer/do-${type}.json doesn't exist\n";
+        print  "ERROR: packer/do-${type}.json doesn't exist\n";
         exit 1;
     }
     my $line = `scripts/doman.pl --show_my_image | grep $server_type`;
@@ -35,7 +44,9 @@ for my $server_type (@server_types){
         print "image ID is not found\n";
         exit 1;
     }
-    my $result = system "scripts/doman.pl --create_droplet -size_id $size_id -region_id $region_id -image_id $image_id -droplet_name $server_type -ssh_key_ids $ssh_key_id";
+    my $cmd = "scripts/doman.pl --create_droplet -size_id $size_id -region_id $region_id -image_id $image_id -droplet_name $server_type -ssh_key_ids $ssh_key_id";
+    print "Execute: $cmd\n";
+    my $result = system $cmd; 
     if ($result == -1){
         print "doman.pl --create_droplet is failed\n";
         exit 1;
@@ -47,7 +58,11 @@ for my $server_type (@server_types){
         print "droplet IP is not found\n";
         exit 1;
     }
-    system "SERVER_TYPE=$type TARGET_HOST=$ip $rake SPEC_OPTS=\"--require ./tests/junit.rb --format JUnit --out results.xml\" tests/spec";
+    print "cd tests\n";
+    chdir "tests";
+    $cmd = "SERVER_TYPE=$type TARGET_HOST=$ip $rake SPEC_OPTS=\"--require junit.rb --format JUnit --out results.xml\" spec";
+    print "Execute: $cmd\n";
+    system $cmd;  
 }
     
     
