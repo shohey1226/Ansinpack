@@ -9,6 +9,8 @@ my $ssh_key_id = 87532;
 
 # Branch name - origin/webapp-0.0.0/nginx-0.0.0 
 my $branch = $ENV{GIT_BRANCH};
+exit 0 if ($branch eq "origin/master"); #ignore master for now
+
 $branch =~ s/^origin\///;
 my @server_types = split /\//, $branch;
 
@@ -20,6 +22,7 @@ for my $server_type (@server_types){
         if ($result == -1){
             print "Failed to execute packer\n";
             exit 1;
+        }
     }
     else{
         print  "packer/do-${type}.json doesn't exist\n";
