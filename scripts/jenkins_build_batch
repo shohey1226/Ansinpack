@@ -1,3 +1,1 @@
-pwd
-export WORKSPACE; export GIT_BRANCH; export GIT_URL
 bash -x scripts/jenkins_job.sh

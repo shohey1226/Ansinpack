@@ -1,8 +1,12 @@
 #!/bin/bash -x
 
-echo $GIT_URL
-echo $GIT_BRANCH
-echo 'test'
+echo $GIT_BRANCH | grep 'origin/master' 2>&1 1>/dev/null
+if [[ $? -eq 0 ]]
+then
+    echo 'master'
+else
+    echo 'branch'
+fi
 
 ## This script is executed by Jenkins job
 #
