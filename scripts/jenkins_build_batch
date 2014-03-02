@@ -1,1 +1,1 @@
-bash -x scripts/jenkins_job.sh
+/usr/bin/perl scripts/jenkins_job.pl

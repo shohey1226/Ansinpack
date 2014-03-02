@@ -151,6 +151,11 @@ doman.pl [options]
    -ssh_key_ids
 
  Example:
+
+   # set DigitalOcean client ID and API key
+   $ export DIGITALOCEAN_CLIENT_ID=xxx
+   $ export DIGITALOCEAN_API_KEY=yyy
+
    # show droplet that you have
    $ doman.pl --show_droplet 
 
@@ -160,6 +165,7 @@ doman.pl [options]
    # show size ids and region
    $ doman.pl --show_size 
    $ doman.pl --show_region 
+   $ doman.pl --show_ssh_key
 
    # create droplet. -ssh_key_ids is optional
    $ doman.pl --create_droplet -size_id 66 -region_id 6 -image_id 111 -droplet_name mydroplet1 -ssh_key_ids 12345
