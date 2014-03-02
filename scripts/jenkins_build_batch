@@ -1,20 +1,3 @@
 pwd
-# This entry is to be copied to Jenkins's build job
-echo $GIT_BRANCH | grep 'origin/master' 2>&1 1 > /dev/null
-if [[ $? -eq 0 ]]
-then
-  echo "Working on orign/master"
-  # for now do nothing
-else
-  echo "Working on branch : $GIT_BRANCH"
-  #/usr/bin/git clone -b $GIT_BRANCH $GIT_URL
-  #/tmp/$today/Ansinpack/scripts/create_images.sh
-  #/tmp/$today/Ansinpack/scripts/bring_up_images.sh
-  #/tmp/$today/Ansinpack/scripts/run_test.sh
-  #if [[ $? -eq 0 ]]
-  #then
-  #  # do nothing
-  #else
-  #  # destroy the
-  #  /tmp/$today/Ansinpack/scripts/destroy_images.sh
-fi
+export WORKSPACE; export GIT_BRANCH; exprot GIT_URL
+scripts/jenkins_job.sh
