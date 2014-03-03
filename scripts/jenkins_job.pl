@@ -21,14 +21,14 @@ for my $server_type (@server_types){
         my $cmd = "$packer validate -var 'snapshot_name=${server_type}' packer/do-${type}.json";
         print "Execute: $cmd\n";
         my $result = system $cmd;
-        if ($result == -1){
+        if ($result != 0 ){
             print "Failed to validate pcaker/do-${type}.json\n";
             exit 1;
         }
         $cmd = "$packer build -var 'snapshot_name=${server_type}' packer/do-${type}.json";
         print "Execute: $cmd\n";
         $result = system $cmd; 
-        if ($result == -1){
+        if ($result != 0){
             print "Failed to execute packer\n";
             exit 1;
         }
@@ -41,13 +41,13 @@ for my $server_type (@server_types){
     $line =~ /id:(\S+)/;
     my $image_id = $1;
     unless (defined $image_id){
-        print "image ID is not found\n";
+        print "ERROR: image ID is not found\n";
         exit 1;
     }
     my $cmd = "scripts/doman.pl --create_droplet -size_id $size_id -region_id $region_id -image_id $image_id -droplet_name $server_type -ssh_key_ids $ssh_key_id";
     print "Execute: $cmd\n";
     my $result = system $cmd; 
-    if ($result == -1){
+    if ($result != 0 ){
         print "doman.pl --create_droplet is failed\n";
         exit 1;
     }
@@ -55,14 +55,18 @@ for my $server_type (@server_types){
     $line =~ /ip:(\S+)/;
     my $ip = $1;
     unless (defined $ip){
-        print "droplet IP is not found\n";
+        print "ERROR: droplet IP is not found\n";
         exit 1;
     }
     print "cd tests\n";
     chdir "tests";
     $cmd = "SERVER_TYPE=$type TARGET_HOST=$ip $rake SPEC_OPTS=\"--require junit.rb --format JUnit --out results.xml\" spec";
     print "Execute: $cmd\n";
-    system $cmd;  
+    $result  = system $cmd;  
+    if ($result != 0 ){
+        print "Error: Failed to execute rake for serverspec\n";
+        exit 1;
+    }
 }
     
     
