@@ -1,0 +1,8 @@
+---
+- name: install openssl-devel
+  yum: name=openssl-devel state=latest
+- name: Install openssl 
+  get_url: url=http://www.openssl.org/source/openssl-1.0.1f.tar.gz dest=/tmp
+- script: install_openssl.sh 
+       
+

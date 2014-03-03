@@ -1,0 +1,10 @@
+---
+- name: install perl with perlenv 
+  script: perlenv.sh 
+- name: copy cpanfile to /tmp/
+  remote_user: kamesho
+  copy: src=cpanfile dest=/tmp/cpanfile
+- name: install modules
+  script: install_with_cpanm.sh 
+       
+
