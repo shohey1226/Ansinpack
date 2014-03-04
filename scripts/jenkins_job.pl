@@ -9,6 +9,7 @@ my $ssh_key_id = 87532;
 
 # Branch name - origin/webapp-0.0.0/nginx-0.0.0 
 my $branch = $ENV{GIT_BRANCH};
+print "Working on $branch ...\n";
 exit 0 if ($branch eq "origin/master"); #ignore master for now
 
 $branch =~ s/^origin\///;
