@@ -5,7 +5,7 @@ my $packer = "/usr/local/bin/packer";
 my $rake = "/usr/bin/rake";
 my $region_id = 6;
 my $size_id = 66;
-my $ssh_key_id = 87532;
+my $ssh_key_id = "87532,90025";
 
 # Branch name - origin/webapp-0.0.0/nginx-0.0.0 
 my $branch = $ENV{GIT_BRANCH};
