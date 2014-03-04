@@ -1,6 +1,9 @@
 ## How to execute Ansible 
 
-    $ . /.env  # load secret keys which is not uploaded to Guthub
+    $ . ~/.env  # load secret keys which is not uploaded to Guthub
+    # load the below
+    export DIGITALOCEAN_CLIENT_ID=xxx
+    export DIGITALOCEAN_API_KEY=yyy
     $ ansible-playbook -i <inventory> <target yml>
 
 

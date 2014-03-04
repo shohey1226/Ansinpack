@@ -25,11 +25,15 @@ my $droplet_id=undef;
 my $droplet_name=undef;
 my $show_ssh_key=undef;
 my $ssh_key_ids=undef;
+my $create_sshkey=undef;
+my $sshkey_name=undef;
+my $pub_sshkey=undef;
 
 my $options_okay = GetOptions (
     'client_id=s'       => \$client_id,  
     'api_key=s'         => \$api_key,  
     'create_droplet'    => \$create_droplet,
+    'create_sshkey'    => \$create_sshkey,
     'show_droplet'    => \$show_droplet,
     'show_size'    => \$show_size,
     'show_region'    => \$show_region,
@@ -43,13 +47,20 @@ my $options_okay = GetOptions (
     'size_id=s' => \$size_id, 
     'droplet_id=s' => \$droplet_id, 
     'droplet_name=s' => \$droplet_name, 
+    'sshkey_name=s' => \$sshkey_name,
+    'pub_sshkey=s' => \$pub_sshkey,
     'verbose'           => \$verbose,  
     'help'              => \$help,  
 );
 
-
-if (defined $help || (! defined $client_id || ! defined $api_key) ){
+if (defined $help){ 
     show_help();
+}
+
+if (! defined $client_id || ! defined $api_key ){
+    print "CLIENT_ID and API_KEY are required\n";
+    print "Use -help to see how to use\n";
+    exit 1;
 }
 
 my $do = DigitalOcean->new(
@@ -100,6 +111,15 @@ elsif (defined $destroy_droplet && defined $droplet_id ) {
     my $droplet = $do->droplet($droplet_id);
     $droplet->destroy;
     print "droplet(id=$droplet_id) has been destroyed\n";
+}
+elsif (defined $create_sshkey && defined $sshkey_name && defined $pub_sshkey){
+    open(my $fh, "<", $pub_sshkey) or die "can't open $pub_sshkey";
+    my $pub = <$fh>;
+    my $new_ssh_key = $do->create_ssh_key(
+        name => $sshkey_name, 
+        ssh_key_pub => $pub,
+    );
+    close $fh;
 }
 elsif ( defined $create_droplet && defined $image_id && defined $droplet_name && defined $size_id && defined $region_id){
     my @param = (
@@ -169,6 +189,9 @@ doman.pl [options]
 
    # create droplet. -ssh_key_ids is optional
    $ doman.pl --create_droplet -size_id 66 -region_id 6 -image_id 111 -droplet_name mydroplet1 -ssh_key_ids 12345
+
+   # create sshkey
+   $ doman.pl --create_sshkey -sshkey_name myssh -pub_sshkey <file of pubic ssh key>
 
    # destroy droplet and image 
    $ doman.pl --destroy_droplet -droplet_id 11111
