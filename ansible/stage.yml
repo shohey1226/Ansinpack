@@ -3,14 +3,14 @@
 - hosts: staging_server
   remote_user: root
   roles:
-    - openssl-1.0.1f
-    - perl5.18.2_system
-    #- serverspec 
+    #- openssl-1.0.1f
+    #- perl5.18.2_system
+    #- packer
+    #- jenkins 
+    - digitalocean-jenkins-sshkey
     #- adduser_github_pubkey 
+    #- serverspec 
     #- python
     ### dopy(digitalocean py) needs python
     #- digitalocean
-    #- perl
-    #- packer
-    #- ci
 

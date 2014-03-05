@@ -1,5 +1,10 @@
 ---
 - name: create sshkey and upload to digitalocean 
-  shell: create_sshkey.sh 
+  script: create_sshkey.sh
+- name: fetch pub key from destination
+  fetch: src=/var/lib/jenkins/.ssh/jenkins_id_rsa.pub dest=/tmp/ flat=yes
+- name: upload sshkey to digitalocean
+  delegate_to: 127.0.0.1
+  script: doman.pl --create_sshkey -sshkey_name jenkins -pub_sshkey /tmp/jenkins_id_rsa.pub
    
        
