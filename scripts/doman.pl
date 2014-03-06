@@ -117,7 +117,7 @@ elsif (defined $create_sshkey && defined $sshkey_name && defined $pub_sshkey){
     my $pub = <$fh>;
     my $new_ssh_key = $do->create_ssh_key(
         name => $sshkey_name, 
-        ssh_key_pub => $pub,
+        ssh_pub_key => $pub, 
     );
     close $fh;
 }
