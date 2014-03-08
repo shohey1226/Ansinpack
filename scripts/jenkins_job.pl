@@ -60,6 +60,12 @@ for my $server_type (@server_types){
             print "Failed to validate pcaker/do-${type}.json\n";
             exit 1;
         }
+    
+        # Delete image if the same name exists
+        my $line = `$doman --show_my_image | grep $server_type`;
+        if ($line =~ /id:(\d+)/){
+            system "$doman --destroy_image -image_id $1";
+        }
 
         # OK, now it's time to create image by packer
         $cmd = "$packer build -var 'snapshot_name=${server_type}' packer/do-${type}.json";
@@ -101,6 +107,10 @@ for my $server_type (@server_types){
 
     print "cd tests\n";
     chdir "tests";
+
+    print "Removing /var/lib/jenkins/.ssh/known_hosts\n";
+    system "/bin/rm -f /var/lib/jenkins/.ssh/known_hosts";
+
     $cmd = "SERVER_TYPE=$type TARGET_HOST=$ip $rake SPEC_OPTS=\"--require junit.rb --format JUnit --out results.xml\" spec";
     print "Execute: $cmd\n";
     $result  = system $cmd;  
