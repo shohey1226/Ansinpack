@@ -111,6 +111,8 @@ for my $server_type (@server_types){
     print "Removing /var/lib/jenkins/.ssh/known_hosts\n";
     system "/bin/rm -f /var/lib/jenkins/.ssh/known_hosts";
 
+    sleep(15);
+
     $cmd = "SERVER_TYPE=$type TARGET_HOST=$ip $rake SPEC_OPTS=\"--require junit.rb --format JUnit --out results.xml\" spec";
     print "Execute: $cmd\n";
     $result  = system $cmd;  
