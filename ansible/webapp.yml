@@ -3,10 +3,6 @@
   remote_user: root
   roles:
     - adduser_github_pubkey
-    #- python
-    ### dopy(digitalocean py) needs python
-    #- digitalocean
-    #- perl
-    #- packer
-    #- ci
+    #- openssl-1.0.1f
+    #- perl5.18.2_system 
 
