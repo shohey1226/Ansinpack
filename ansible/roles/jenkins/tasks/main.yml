@@ -9,5 +9,7 @@
   yum: name=java-1.7.0-openjdk state=latest 
 - name: start jenkins
   service: name=jenkins state=started enabled=yes
+- name: add jenkins user to docker
+  command: usermod -G docker jenkins
    
        
