@@ -7,7 +7,9 @@
     #- perl5.18.2_system
     #- packer
     #- jenkins 
-    - digitalocean-jenkins-sshkey
+    - epel-6.8
+    - docker
+    #- digitalocean-jenkins-sshkey
     #- adduser_github_pubkey 
     #- serverspec 
     #- python
