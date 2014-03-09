@@ -1,7 +1,6 @@
 {
   "variables": {
-    "do_api_key": "{{env `DIGITALOCEAN_API_KEY`}}",
-    "do_client_id": "{{env `DIGITALOCEAN_CLIENT_ID`}}"
+      "image_name": ""
   },
   "provisioners": [
     {
@@ -29,15 +28,12 @@
       "staging_directory": "/tmp/ansible-local"
     }
   ],
+
   "builders": [
     {
-      "type": "digitalocean",
-      "api_key": "{{ user `do_api_key` }}",
-      "client_id": "{{ user `do_client_id` }}",
-      "region_id": 6,
-      "image_id": 1646467,
-      "size_id": 66,
-      "snapshot_name": "common"
+      "type": "docker",
+      "image": "centos",
+      "export_path": "{{ user `image_name` }}"
     }
   ]
 }
