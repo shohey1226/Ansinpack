@@ -33,6 +33,12 @@ There are the mixture of concept as following:
  7. severspec to test
  8. With result, leave the image or destroy the image
 
+### image naming comvenstion
+
+type:epochtime:SHA1(first 7 digits)
+
+e.g. webapp:1394493444:e7c9e38
+
 ### Directory structure
 
 ```
