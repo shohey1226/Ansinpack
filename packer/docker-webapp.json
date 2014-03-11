@@ -14,8 +14,15 @@
           "mkdir -p /tmp/ansible-local",
           "sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config",
           "sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config",
+          "mkdir -p /root/.ssh",
           "yum install openssh openssh-clients openssh-server -y"
+
       ]
+    },
+    {
+      "type": "file",
+      "source": "etc/authorized_keys",
+      "destination": "/root/.ssh/authorized_keys"
     },
     {
       "type": "file",
