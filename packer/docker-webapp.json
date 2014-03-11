@@ -12,7 +12,7 @@
           "sed -e '/mpz_powm_sec/I s/^/# /' < /usr/lib64/python2.6/site-packages/Crypto/Util/number.py > /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new",
           "mv -f /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new /usr/lib64/python2.6/site-packages/Crypto/Util/number.py",
           "mkdir -p /tmp/ansible-local",
-          'yum install openssh openssh-clients openssh-server -y"
+          "yum install openssh openssh-clients openssh-server -y"
       ]
     },
     {
