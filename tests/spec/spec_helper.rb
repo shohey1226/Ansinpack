@@ -9,6 +9,7 @@ RSpec.configure do |c|
   options = Net::SSH::Config.for(c.host)
   #user    = options[:user] || Etc.getlogin
   user    = 'root' 
+  options[:port] = ENV['TARGET_PORT']
   c.ssh   = Net::SSH.start(c.host, user, options)
   c.os    = backend.check_os
 end
