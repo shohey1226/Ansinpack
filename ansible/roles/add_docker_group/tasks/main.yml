@@ -1,0 +1,4 @@
+---
+- name: add user to docker group 
+  user: name=kamesho groups=docker 
+  user: name=jenkins groups=docker 
