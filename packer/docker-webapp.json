@@ -13,10 +13,12 @@
           "mv -f /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new /usr/lib64/python2.6/site-packages/Crypto/Util/number.py",
           "mkdir -p /tmp/ansible-local",
           "mkdir -p /root/.ssh",
+          "chmod 755 /root/.ssh",
           "yum install openssh openssh-clients openssh-server -y",
           "sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config",
           "sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config",
-          "/etc/init.d/sshd start"
+          "/etc/init.d/sshd start",
+          "/etc/init.d/sshd stop"
       ]
     },
     {
