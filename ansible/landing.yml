@@ -1,6 +1,6 @@
 ---
 # file: stage.yml
-- hosts: staging_server
+- hosts: all
   remote_user: root
   roles:
     #- openssl-1.0.1f
@@ -8,10 +8,10 @@
     #- packer
     #- jenkins 
     #- epel-6.8
+    - ansible
     #- docker
-    - add_docker_group
+    #- add_user_to_docker_grp 
     #- digitalocean-jenkins-sshkey
-    #- adduser_github_pubkey 
     #- serverspec 
     #- python
     ### dopy(digitalocean py) needs python

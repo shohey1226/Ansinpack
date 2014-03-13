@@ -1,0 +1,5 @@
+---
+- name: install ansible 
+  yum: name=ansible state=latest
+       
+

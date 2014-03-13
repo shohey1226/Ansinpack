@@ -6,6 +6,11 @@
     export DIGITALOCEAN_API_KEY=yyy
     $ ansible-playbook -i <inventory> <target yml>
 
+    # comma in the last of -i & hosts:all in the yml file
+    $ ansible-playbook -i 'dev.guideroid.com,' landing.yml
+
+    # to docker vm
+    $ ansible-playbook -i 'localhost:2222,' hoge.yml 
 
 ## directory structure
 
