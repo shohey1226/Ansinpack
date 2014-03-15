@@ -56,11 +56,7 @@ sub run_branch_process{
 
     my $base_image_repo = 'localhost:5000/base';
     my $base_image_id = `$docker images | grep $base_image_repo | grep latest | awk '{print \$3}'`;
-
-    # 
-    # # find the current base image 
-    # 
-    # system "$docker pull $base_image"; 
+    chomp $base_image_id;
 
     my $epoch = time();
     my $image_name = $type . $epoch . '-' . $git_commit . '.img';
@@ -90,17 +86,21 @@ sub run_branch_process{
         die "Failed to execute : $cmd" if ($container_id eq '');
 
         # Run test
-        $cmd = "tests/$type/run.sh";
-        print "Execute: $cmd\n";
+        chdir "tests/$type";
+        $cmd = "./run.sh";
+        print "chdir to tests/$type and execute: $cmd\n";
         if (system($cmd) == 0){
             # push to the private repo
-            $cmd = "$docker pull localhost:5000/base:latest";
+            $cmd = "$docker push localhost:5000/base";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
             # stop container 
             $cmd = "$docker stop $container_id";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
             exit 0;
         }else{
+            # stop container
+            $cmd = "$docker stop $container_id";
+            system($cmd) == 0 or die "Failed to execute: $cmd\n";  
             # destroy container and image 
             $cmd = "$docker rm $container_id";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  

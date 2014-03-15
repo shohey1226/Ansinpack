@@ -23,19 +23,19 @@
     },
     {
       "type": "file",
-      "source": "etc/authorized_keys",
+      "source": "packer/etc/authorized_keys",
       "destination": "/root/.ssh/authorized_keys"
     },
     {
       "type": "file",
-      "source": "../ansible",
+      "source": "ansible",
       "destination": "/tmp/ansible-local"
     },
     {
       "type": "ansible-local",
-      "playbook_file": "../ansible/base.yml",
+      "playbook_file": "ansible/base.yml",
       "role_paths": [
-          "../ansible/roles/adduser_github_pubkey"
+          "ansible/roles/adduser_github_pubkey"
       ],
       "staging_directory": "/tmp/ansible-local"
     }
