@@ -1,0 +1,51 @@
+{
+  "variables": {
+      "image_name": ""
+  },
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+          "yum install gcc python-devel python-crypto python-setuptools -y",
+          "easy_install pip",
+          "pip install ansible",
+          "sed -e '/mpz_powm_sec/I s/^/# /' < /usr/lib64/python2.6/site-packages/Crypto/Util/number.py > /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new",
+          "mv -f /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new /usr/lib64/python2.6/site-packages/Crypto/Util/number.py",
+          "mkdir -p /tmp/ansible-local",
+          "mkdir -p /root/.ssh",
+          "chmod 755 /root/.ssh",
+          "yum install openssh openssh-clients openssh-server -y",
+          "sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config",
+          "sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config",
+          "/etc/init.d/sshd start",
+          "/etc/init.d/sshd stop"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "etc/authorized_keys",
+      "destination": "/root/.ssh/authorized_keys"
+    },
+    {
+      "type": "file",
+      "source": "../ansible",
+      "destination": "/tmp/ansible-local"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "../ansible/base.yml",
+      "role_paths": [
+          "../ansible/roles/adduser_github_pubkey"
+      ],
+      "staging_directory": "/tmp/ansible-local"
+    }
+  ],
+
+  "builders": [
+    {
+      "type": "docker",
+      "image": "centos",
+      "export_path": "{{ user `image_name` }}"
+    }
+  ]
+}
