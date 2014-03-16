@@ -36,7 +36,8 @@ print "Working on $branch ...\n";
 if ($branch eq "origin/master"){
     run_master_process();
 }else{
-    $branch=~ s/^origin\///;
+    $branch =~ s/^origin\///;
+    $branch =~ s/\/(\S+)$//;
     run_branch_process($branch, $git_commit);
 }
 
