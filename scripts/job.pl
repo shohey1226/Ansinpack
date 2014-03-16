@@ -78,7 +78,7 @@ sub run_branch_process{
 
         # if the latest exsits,  tag current $user/base:latest to $user/base:$epoch 
         if ($base_image_id ne ''){
-            $cmd = "$docker tag $base_image_id ${base_image_repo}:${epoch}";
+            $cmd = "$docker tag $base_image_id ${base_image_repo}:${epoch}-${git_commit}";
             print "Execute: $cmd\n";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
         }
