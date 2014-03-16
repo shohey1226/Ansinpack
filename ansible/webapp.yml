@@ -2,7 +2,11 @@
 - hosts: all 
   remote_user: root
   roles:
+<<<<<<< HEAD
     - iptables-webapp
+=======
+    - iptables-webapp 
+>>>>>>> origin/master
     #- openssl-1.0.1f
     #- perl5.18.2_system 
 

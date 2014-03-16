@@ -23,9 +23,17 @@
     },
     {
       "type": "ansible-local",
-      "playbook_file": "ansible/webapp.yml",
+      "playbook_file": "ansible/base.yml",
       "role_paths": [
           "ansible/roles/adduser_github_pubkey"
+      ],
+      "staging_directory": "/tmp/ansible-local"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "ansible/webapp.yml",
+      "role_paths": [
+          "ansible/roles/iptables-webapp"
       ],
       "staging_directory": "/tmp/ansible-local"
     }
