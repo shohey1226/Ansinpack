@@ -1,8 +1,0 @@
-require 'rake'
-require 'rspec/core/rake_task'
-
-server_type = ENV['SERVER_TYPE']
-
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.pattern = 'spec/' + server_type + '/*_spec.rb'
-end
