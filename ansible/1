@@ -1,8 +1,0 @@
-#!/bin/env perl
-
-
-@line = `docker ps -a | grep latest`;
-chomp $line;
-
-
-#webapp1394936874-09d901c
