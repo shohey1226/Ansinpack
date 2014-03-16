@@ -3,6 +3,7 @@ use warnings;
 use JSON::PP;
 use FindBin qw($Bin);
 use Data::Dumper;
+use Cwd;
 
 my $docker = "/usr/bin/docker";
 my $packer = "/usr/local/bin/packer";
@@ -43,18 +44,6 @@ sub run_master_process{
     # and run test which should be the same as docker test
     my $cmd;
 
-    #--------------------------------------------------
-    # Get all sshkeys that are loaded on DisgitalOcean
-    # These keys is to be used for VM's root
-    #--------------------------------------------------
-    my @ssh_key_ids;
-    for my $line (split /\n/, `$doman --show_ssh_key`) {
-        if ($line =~ /id:(\d+)/) {
-            push @ssh_key_ids, $1;
-        }
-    }
-    my $ssh_key_id = join ',', @ssh_key_ids; 
-    print "SSH Key IDs: $ssh_key_id \n";
 
     # Find what is the change
     my $user = $ENV{USER};
@@ -77,12 +66,19 @@ sub run_master_process{
 
     my $out = `$doman --show_my_image`;
     for my $type (keys %$names ){
-       my $name = $type . $names->{$type};
-       if ($out !~ /name:$name/){
-           _create_do_image($type, $name);
-       }
+        my $name = $type . $names->{$type};
+        if ($out !~ /name:$name/){
+            my ($ip, $droplet_id, $image_id) = _create_do_image($type, $name);
+            if (_run_test($type, $ip) == 0 ){
+                print "Test passed for $type\n";
+            }else{
+                print "Error: Failed to execute rake for serverspec\n";
+                print "Destroying droplet(id=$droplet_id)..\n";
+                system "$doman --destroy_droplet -droplet_id $droplet_id"; 
+                exit 1;
+            }
+        }
     }
-    
 
     exit 0;
 }
@@ -199,12 +195,86 @@ sub run_branch_process{
     }
 }
 
+sub _run_test{
+    my ($type, $ip) = @_;
+    my $dir = getcwd;
+
+    print "Removing /var/lib/jenkins/.ssh/known_hosts\n";
+    system "/bin/rm -f /var/lib/jenkins/.ssh/known_hosts";
+    sleep(15);
+ 
+    chdir "$dir/tests/$type" or die "Can't cd to tests/${type}: $!\n";
+    my $cmd = "TARGET_HOST=$ip ./run.sh";
+    print "chdir to tests/$type and execute: $cmd\n";
+    my $result = system($cmd);
+    chdir $dir;
+    return $result;
+}
+
 
 sub _create_do_image{
     my ($type, $name) = @_;
-    print $type, " === " , $name, "\n";
+
+    #--------------------------------------------------
+    # Get all sshkeys that are loaded on DisgitalOcean
+    # These keys is to be used for VM's root
+    #--------------------------------------------------
+    my @ssh_key_ids;
+    for my $line (split /\n/, `$doman --show_ssh_key`) {
+        if ($line =~ /id:(\d+)/) {
+            push @ssh_key_ids, $1;
+        }
+    }
+    my $ssh_key_id = join ',', @ssh_key_ids; 
+    print "SSH Key IDs: $ssh_key_id \n";
+
+    my $cmd;
+    my $line;
+
+    print "Create image for $type...\n";
     my $packer_json_file = "$Bin/../packer/do-${type}.json";
-    
+    die "$packer_json_file is not found\n" if( ! -e $packer_json_file);
+
+    # load size and region from the the packer json
+    local $/;
+    open( my $fh, "<", $packer_json_file) or die "can't open $packer_json_file: $!";
+    my $json_text = <$fh>;
+    my $ref = decode_json $json_text;
+    my $size_id = $ref->{builders}[0]->{size_id};
+    my $region_id = $ref->{builders}[0]->{region_id};
+ 
+    $line = `$doman --show_my_image | grep $name`;
+    if ($line =~ /id:(\d+)/){
+        $cmd = "$doman --destroy_image -image_id $1";
+        system($cmd) == 0 or die "Failed to execute: $cmd\n";
+    }
+
+    # create image now
+    $cmd = "$packer build -var 'snapshot_name=$name}' $packer_json_file";
+    print "Execute: $cmd\n";
+    system($cmd) == 0 or die "Failed to execute: $cmd\n";
+
+    # get image_id
+    $line = `$doman --show_my_image | grep $name`;
+    $line =~ /id:(\S+)/;
+    my $image_id = $1;
+    unless (defined $image_id){
+        print "ERROR: image ID is not found\n";
+        exit 1;
+    }
+    # create droplet
+    $cmd = "$doman --create_droplet -size_id $size_id -region_id $region_id -image_id $image_id -droplet_name $name -ssh_key_ids $ssh_key_id";
+    print "Execute: $cmd\n";
+    system($cmd) == 0 or die "Failed to execute: $cmd\n";
+
+    # get IP and droplet ID
+    $line = `$doman --show_droplet | grep $name`;
+    $line =~ /ip:(\S+)/;
+    my $ip = $1;
+    die "ERROR: droplet IP is not found\n" unless (defined $ip);
+    $line =~ /id:(\d+)/;
+    my $droplet_id = $1;
+    return ($ip, $droplet_id, $image_id);
 }
 
 
