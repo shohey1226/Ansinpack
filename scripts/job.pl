@@ -23,16 +23,6 @@ my $git_commit = substr ($ENV{GIT_COMMIT}, 0, 7);
 my $branch = $ENV{GIT_BRANCH};
 print "Working on $branch ...\n";
 
-
-###-------------------------------------------
-### Make sure that docker registry is running
-###-------------------------------------------
-##my $registry_container_id = `$docker ps | grep registry | awk '{print \$1}'`;
-##if ($registry_container_id eq ''){
-##    print "Bring up docker registry..\n";
-##    system ("$docker run -d -p 5000:5000 -v /tmp/registry:/tmp/registry registry");
-##}
-
 if ($branch eq "origin/master"){
     run_master_process();
 }else{
@@ -66,20 +56,21 @@ sub run_master_process{
     my $ssh_key_id = join ',', @ssh_key_ids; 
     print "SSH Key IDs: $ssh_key_id \n";
 
-    my $user = $ENV{USER};
-
     # Find what is the change
-    my @lines = `$docker ps -a | grep $user | grep ':lastest'`;
+    my $user = $ENV{USER};
+    my @lines = `$docker ps -a | grep $user | grep ':latest'`;
     my $names;
     for my $line (@lines){
         chomp $line;
-        if ($line =~ /(\S+)(\d{10}-\S{7})/){
+        if ($line =~ /(\S+)(\d{10}\-\S{7})/){
             my $type = $1; 
             my $number = $2;
             if (defined $names->{$type}) {
                 if ($names->{$type} lt $number){
                     $names->{$type} = $number;
                 }
+            }else{
+                $names->{$type} = $number;
             }
         }
     }
@@ -88,8 +79,8 @@ sub run_master_process{
     for my $type (keys %$names ){
        my $name = $type . $names->{$type};
        if ($out !~ /name:$name/){
-           _create_do_image($name);
-        }
+           _create_do_image($type, $name);
+       }
     }
     
 
@@ -211,11 +202,12 @@ sub run_branch_process{
 
 sub _create_do_image{
     my ($type, $name) = @_;
-    print $type, $name, "\n";
+    print $type, " === " , $name, "\n";
+    my $packer_json_file = "$Bin/../packer/do-${type}.json";
+    
 }
 
 
-###     my $packer_json_file = "$Bin/../packer/do-${type}.json";
 ###     if ( -e $packer_json_file ){
 ### 
 ###         #------------------------------------------------------
