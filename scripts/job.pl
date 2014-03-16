@@ -8,6 +8,11 @@ my $docker = "/usr/bin/docker";
 my $packer = "/usr/local/bin/packer";
 my $rake = "/usr/bin/rake";
 my $doman = "$Bin/doman.pl";
+my $ansible = "/usr/bin/ansible-playbook";
+
+if ($ENV{GIT_COMMIT} eq '' || $ENV{GIT_BRANCH} eq '' ){
+    die "Both GIT_COMMIT and GIT_BRANCH should exist\n";
+}
 
 # first 7 digits of commit#
 my $git_commit = substr ($ENV{GIT_COMMIT}, 0, 7);
@@ -19,14 +24,14 @@ my $branch = $ENV{GIT_BRANCH};
 print "Working on $branch ...\n";
 
 
-#-------------------------------------------
-# Make sure that docker registry is running
-#-------------------------------------------
-my $registry_container_id = `$docker ps | grep registry | awk '{print \$1}'`;
-if ($registry_container_id eq ''){
-    print "Bring up docker registry..\n";
-    system ("$docker run -d -p 5000:5000 -v /tmp/registry:/tmp/registry registry");
-}
+###-------------------------------------------
+### Make sure that docker registry is running
+###-------------------------------------------
+##my $registry_container_id = `$docker ps | grep registry | awk '{print \$1}'`;
+##if ($registry_container_id eq ''){
+##    print "Bring up docker registry..\n";
+##    system ("$docker run -d -p 5000:5000 -v /tmp/registry:/tmp/registry registry");
+##}
 
 if ($branch eq "origin/master"){
     run_master_process();
@@ -54,7 +59,9 @@ sub run_master_process{
 sub run_branch_process{
     my ($type, $git_commit) = @_; 
 
-    my $base_image_repo = 'localhost:5000/base';
+    my $user = $ENV{USER};
+
+    my $base_image_repo = "$user/base";
     my $base_image_id = `$docker images | grep $base_image_repo | grep latest | awk '{print \$3}'`;
     chomp $base_image_id;
 
@@ -68,20 +75,20 @@ sub run_branch_process{
         print "Execute: $cmd \n";
         system($cmd) == 0 or die "Failed to execute: $cmd\n"; 
 
-        # if the latest exsits,  tag current localhost:5000/base:latest to localhost:5000/base:$epoch 
+        # if the latest exsits,  tag current $user/base:latest to $user/base:$epoch 
         if ($base_image_id ne ''){
-            $cmd = "$docker tag $base_image_id localhost:5000/base:$epoch";
+            $cmd = "$docker tag $base_image_id ${base_image_repo}:${epoch}";
             print "Execute: $cmd\n";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
         }
 
         # Create docker image
-        $cmd = "$docker import - localhost:5000/base < /tmp/$image_name";
+        $cmd = "$docker import - ${base_image_repo} < /tmp/$image_name";
         $base_image_id = `$cmd`; 
         die "Failed to execute: $cmd" if ($base_image_id eq ''); 
 
         # Run the image 
-        $cmd = "$docker run -d --name base${epoch}-${git_commit} -p 2222:22 localhost:5000/base:latest /usr/sbin/sshd -D";
+        $cmd = "$docker run -d --name base${epoch}-${git_commit} -p 2222:22 ${base_image_repo}:latest /usr/sbin/sshd -D";
         my $container_id = `$cmd`;
         die "Failed to execute : $cmd" if ($container_id eq '');
 
@@ -90,38 +97,71 @@ sub run_branch_process{
         $cmd = "./run.sh";
         print "chdir to tests/$type and execute: $cmd\n";
         if (system($cmd) == 0){
-            # push to the private repo
-            $cmd = "$docker push localhost:5000/base";
-            system($cmd) == 0 or die "Failed to execute: $cmd\n";  
-            # stop container 
+
             $cmd = "$docker stop $container_id";
+            print $cmd , "\n";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
-            exit 0;
+
+            # destroy container and image 
+            $cmd = "$docker rm $container_id";
+            print $cmd , "\n";
+            system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+
+            exit 0; # exit successfully 
+
         }else{
             # stop container
             $cmd = "$docker stop $container_id";
+            print $cmd , "\n";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+
             # destroy container and image 
             $cmd = "$docker rm $container_id";
+            print $cmd , "\n";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+
             $cmd = "$docker rmi $base_image_id";
+            print $cmd , "\n";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
             exit 1;
         }
     }else{
         # find latest container
-        # if exists, start the container 
-        # if not, check whether we have image or not,
-        # if exsits, start the image,
-        # if not, error saying "base is not found"
+        $cmd = "$docker run -d --name ${type}${epoch}-${git_commit} -p 2222:22 ${base_image_repo}:latest /usr/sbin/sshd -D";
+        print $cmd, "\n";
+        my $container_id = `$cmd`;
+        if ($container_id eq ''){
+            print "Please create base image first\n";
+            exit 1;
+        }
+
+        # executing Ansible
+        $cmd = "ANSIBLE_CONFIG=ansible/ansible.cfg $ansible -i 'localhost:2222,' ansible/${type}.yml";
+        print $cmd, "\n";
+        system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+
+       chdir "tests/$type" or die "Can't cd to tests/${type}: $!\n";
+       $cmd = "./run.sh";
+       print "chdir to tests/$type and execute: $cmd\n";
+       if (system($cmd) == 0){
+            # stop container
+            $cmd = "$docker stop $container_id";
+            print $cmd , "\n";
+            system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+            exit 0;
+       }else{
+            # stop container
+            $cmd = "$docker stop $container_id";
+            print $cmd , "\n";
+            system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+
+            # destroy container and image 
+            $cmd = "$docker rm $container_id";
+            print $cmd , "\n";
+            system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+       }
         
-        # assume here, we have container is running,
-        # run ansible-playbook 
-        # ansible-playbook -i 'localhost:2222,' $type.yml
-        # if failed, error
-        # if not, run test
     }
-    # check if base image exits
 }
 
 

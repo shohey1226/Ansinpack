@@ -22,7 +22,7 @@ iptables -P FORWARD DROP
 iptables -A INPUT -i lo -j ACCEPT
 
 # allow the internal access 
-iptables -A INPUT -s $LOCALNET -j ACCEPT
+#iptables -A INPUT -s $LOCALNET -j ACCEPT
 
 
 # allow respose when the access is from internal 
@@ -43,7 +43,7 @@ iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 
 # SSL 
-#iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
 
 # For test like Mojolicious
 iptables -A INPUT -p tcp --dport 3000 -j ACCEPT
