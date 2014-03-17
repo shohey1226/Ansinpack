@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+	<testsuite name="master.Success" errors="0" failures="0" tests="1">
+		<testcase classname="master.Success" name="No need to create image" assertions="1">
+		</testcase>
+	</testsuite>
+</testsuites>
