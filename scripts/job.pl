@@ -125,7 +125,7 @@ sub run_branch_process{
 
         # Run test
         chdir "tests/$type";
-        $cmd = "./run.sh";
+        $cmd = "TARGET_HOST=localhost TARGET_PORT=2222 ./run.sh";
         print "chdir to tests/$type and execute: $cmd\n";
         if (system($cmd) == 0){
 
@@ -172,7 +172,7 @@ sub run_branch_process{
         system($cmd) == 0 or die "Failed to execute: $cmd\n";  
 
        chdir "tests/$type" or die "Can't cd to tests/${type}: $!\n";
-       $cmd = "./run.sh";
+       $cmd = "TARGET_HOST=localhost TARGET_PORT=2222 ./run.sh";
        print "chdir to tests/$type and execute: $cmd\n";
        if (system($cmd) == 0){
             # stop container
