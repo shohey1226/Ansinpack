@@ -250,7 +250,7 @@ sub _create_do_image{
     }
 
     # create image now
-    $cmd = "$packer build -var 'snapshot_name=$name}' $packer_json_file";
+    $cmd = "$packer build -var 'snapshot_name=$name' $packer_json_file";
     print "Execute: $cmd\n";
     system($cmd) == 0 or die "Failed to execute: $cmd\n";
 
