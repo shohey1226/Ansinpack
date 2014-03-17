@@ -69,7 +69,7 @@ sub run_master_process{
         my $name = $type . $names->{$type};
         if ($out !~ /name:$name/){
             my ($ip, $droplet_id, $image_id) = _create_do_image($type, $name);
-            if (_run_test($type, $ip) == 0 ){
+            if (_run_test($type, $ip, 22) == 0 ){
                 print "Test passed for $type\n";
             }else{
                 print "Error: Failed to execute rake for serverspec\n";
@@ -196,7 +196,7 @@ sub run_branch_process{
 }
 
 sub _run_test{
-    my ($type, $ip) = @_;
+    my ($type, $ip, $port) = @_;
     my $dir = getcwd;
 
     print "Removing /var/lib/jenkins/.ssh/known_hosts\n";
@@ -204,7 +204,7 @@ sub _run_test{
     sleep(15);
  
     chdir "$dir/tests/$type" or die "Can't cd to tests/${type}: $!\n";
-    my $cmd = "TARGET_HOST=$ip ./run.sh";
+    my $cmd = "TARGET_HOST=$ip TARGET_PORT=$port ./run.sh";
     print "chdir to tests/$type and execute: $cmd\n";
     my $result = system($cmd);
     chdir $dir;
