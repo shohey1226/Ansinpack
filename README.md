@@ -58,9 +58,20 @@ There are the mixture of systems/tools as following:
 10.	If sucesss, you have the image
  
 
-### Naming comvenstion of image
+### Naming convention of image
 
-TYPEepochtime-SHA1(first 7 digits) : e.g. webapp1394493444-e7c9e38, db13944933244-ac8038a
+TYPE + Epoch Time + '-' + GIT_COMMIT(first 7 digits) 
+
+e.g. webapp1394493444-e7c9e38, db13944933244-ac8038a
+
+As epoch time is inside of the name, you can see when the image is created. Also easy to sort or get the latest one.
+```
+$ date -d @1394493444 +'%Y/%m/%d/%H:%M'
+```
+As commit# is inside, you can see the file contents at the revision.
+```
+$ git show e7c9e38:ansible/webapp.yml
+```
 
 ### Directory structure
 
@@ -68,7 +79,7 @@ TYPE needs to be the same string.
 
 ```
  / 
-   provision/ # ansible root
+   ansible/ # ansible root
       production # inventory file
       roles/
         perl-5_18_2-system/ # include version and brief explanation
