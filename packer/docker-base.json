@@ -23,11 +23,6 @@
     },
     {
       "type": "file",
-      "source": "packer/etc/authorized_keys",
-      "destination": "/root/.ssh/authorized_keys"
-    },
-    {
-      "type": "file",
       "source": "ansible",
       "destination": "/tmp/ansible-local"
     },
@@ -38,6 +33,11 @@
           "ansible/roles/adduser_github_pubkey"
       ],
       "staging_directory": "/tmp/ansible-local"
+    },
+    {
+      "type": "file",
+      "source": "/var/lib/jenkins/.ssh/id_rsa.pub",
+      "destination": "/root/.ssh/authorized_keys"
     }
   ],
 

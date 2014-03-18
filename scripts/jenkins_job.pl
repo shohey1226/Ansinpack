@@ -105,7 +105,7 @@ sub run_branch_process{
 
     if ($type eq 'base'){
         # Create image file using Packer 
-        $cmd = "$packer build -var 'image_name=/tmp/$image_name' packer/docker-${type}.json";
+        $cmd = "$packer build -var 'image_name=/tmp/$image_name' packer/docker-base.json";
         print "Execute: $cmd \n";
         system($cmd) == 0 or die "Failed to execute: $cmd\n"; 
 
