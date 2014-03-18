@@ -3,8 +3,8 @@
   yum: name=docker-io state=latest
 - name: start docker-io 
   service: name=docker state=started enabled=yes
-- name: start registry instance if not up 
-  script: start_registry.sh
+#- name: start registry instance if not up 
+#  script: start_registry.sh
   
    
        

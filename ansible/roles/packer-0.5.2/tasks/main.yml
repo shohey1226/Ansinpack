@@ -1,4 +1,6 @@
 ---
+- name: Install unzip 
+  yum: name=unzip state=latest
 - name: check whether packer exists or not
   shell: "[ -f /usr/local/bin/packer ] && echo 'Found' || echo ''"
   register: packer_installed

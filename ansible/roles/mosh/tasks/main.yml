@@ -1,6 +1,3 @@
 ---
 - name: install mosh 
   yum: name=mosh state=latest
-- name: start mosh
-       
-

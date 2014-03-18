@@ -1,5 +1,5 @@
 ---
 - name: install epel 
-  shell: rpm -ivh http://ftp.jaist.ac.jp/pub/Linux/Fedora/epel/6/i386/epel-release-6-8.noarch.rpm 
+  shell: rpm -ivh --force http://ftp.jaist.ac.jp/pub/Linux/Fedora/epel/6/i386/epel-release-6-8.noarch.rpm 
    
        
