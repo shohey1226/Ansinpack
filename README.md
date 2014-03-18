@@ -1,45 +1,70 @@
-Ansinpack
+Ansinpack : An image creation framework for Immutable Infrastructure
 =========
 
-## What is this? 
+## What is Ansinpack? 
 
-Ansinpack is a flow to build immutable infrastructure by using Ansible and Packer.
-The name comes from ANSIble aNd PACKer. Also Ansin(安心) means 'feel safe' in Japanese. 
-Hope that this flow provides a package for infrastructure engineer to feel safe:) 
+[Immutable infrastructure/servers or disposable infrastructure/servers](http://chadfowler.com/blog/2013/06/23/immutable-deployments/) is the recent topic in cloud era.
+To realize immutable infra, we need two things.
 
-## Why we need this?
+1. Create images for cloud service
+2. Deploy the images (or instantiate the images) on the cloud
 
-It's been a while since immutable infrastructure(II) was focused. We have provisioning and image handling tools but there are not many public recipes to deal with II.  Ansinpack can be one of the flow so that people get into II space.
+Ansinpack handles "1. Create images" using Anible and Packer. 
 
-## How this is implemented? 
+_Note: The name comes from ANSIble aNd PACKer. Also Ansin(安心) means 'feel safe' in Japanese. 
+Hope that this flow provides a package for infrastructure engineer to feel safe:)_
 
-### Base concepts
-
-There are the mixture of concept as following:
-
-   * Github flow 
-   * Continuous Integration 
-   * Test Driven Development to infrastructure
+One more important thing is that we need to know the state of the image. For example, we should know what's inside in the image without logging to host(instance). -- "Infrastructure as Code" is the key concept of this. Ansible is used to make this happen.  Ansible is easy to use, comparing to Chef/Puppet.
 
 
-### Generic Flow 
+## How is Ansinpack implemented? 
 
- 1. Push Github
- 2. Jenkins job runs by Github hook
- 3. git clone this repo
- 4. Execute scripts/jenkins.pl by the Jinkins's job
- 5. In the job, run packer to create images provisioning by Ansible
- 6. In the job, bring up the image
- 7. severspec to test
- 8. With result, leave the image or destroy the image
+There are the mixture of systems/tools as following:
 
-### image naming comvenstion
+   * Github : Repo to have all Github flow 
+   * Jenkins : CI and hook for github
+   * Ansible : provisioner 
+   * Packer : Image creator
+   * Docker : Instance for branch : quick test
+   * Serverspec : testing instance
 
-type:epochtime:SHA1(first 7 digits)
+#### Brief flow explanation
 
-e.g. webapp:1394493444:e7c9e38
+ 1. Push to Github
+ 2. Jenkins runs a job with Github hook
+ 3. When branch is not master, then create docker image and test its instance
+  1. Success - keep the image
+  2. Fail - destory image
+ 4. When branch is master, then create vendor image(like DigitalOcean) and test its instance
+  1. Success - keep the image
+  2. Fail - destory image
+
+### Diagram
+
+
+
+### Flow chart to see the details
+
+
+1.	User git push 
+2.	Jenkins hook notices the branch change, and run batch
+3.	The batach create docker image by packer and ansible
+4.	The docker image is instantiated and tested by Serverspec
+5.	If fail, delete the image
+6.	If success, it’s ready to merge to master branch
+7.	If master branch is merged, create vendor image with packer and ansible
+8.	Instantiate isamge and serverspec test it.
+9.	If failed, delelte image
+10.	If sucesss, you have the image
+ 
+
+### Naming comvenstion of image
+
+TYPEepochtime-SHA1(first 7 digits) : e.g. webapp1394493444-e7c9e38, db13944933244-ac8038a
 
 ### Directory structure
+
+TYPE needs to be the same string.
 
 ```
  / 
@@ -50,19 +75,29 @@ e.g. webapp:1394493444:e7c9e38
           tasks/main.yml # this is followed ansible best practice
           handlers/
           ...
-        adduser-system/
+        adduser/
         ...
-      webapp.yml # symlink to src/webapp-VERSION.yml t point to the latest
-      stage.yml # to provision staging sever, which is not done by packer
+      landing.yml # Landing host which Jenkins runs to create image - required
+      base.yml  # base image that is used for TYPE image - required
+      TYPE.yml  # e.g. webapp.yml, database.yml or others. this is created on base image.
+      webapp.yml # 
       ...
     packer/
-      # do:DigitalOcean vb:Virtualbox
-      do-webapp.json # symlink from src/webapp-VERSION.json 
-      vb-webapp.json # 
+      # do:DigitalOcean docker:Docker
+      do-TYPE.json # create image from base.yml and TYPE.yml 
+      docker-base.json # docker image creation using base.yml
+      ...
     scripts/
-      doman # DigitalOcean MANipulator 
-      jenkins.pl # jenkins job to run
-      packer_wrapper.pl # we may need this.. 
+      doman.pl # DigitalOcean MANipulator 
+      jenkins_job.pl # jenkins job to run
+    tests/
+      TYPE/  # see below webapp for an example
+      webapp/
+        run.sh # executed by jenkins_job.pl for the Serverspec test
+        Rakefile
+        spec/
+          roles/*_spec.rb  # test is here
+. 
 ```
 
 
