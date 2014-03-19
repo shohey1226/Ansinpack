@@ -1,4 +1,4 @@
-Ansinpack : An image creation framework for Immutable Infrastructure
+Ansinpack : An image creation framework for Immutable Infrastructure with Ansible and Packer
 =========
 
 ## What is Ansinpack? 
@@ -111,5 +111,89 @@ TYPE needs to be the same string.
 . 
 ```
 
+## How to install
 
+### 1 Fork Ansinpack from Github 
+
+This is to set up your infrastructure as Code(controlled by Github)
+
+### 2 Build a landing host
+
+Jenkins, Packer, Docker, Ansible and other packages needs to be installed on the landing host in order to create image on the host. Run the following command agaist the landing host.
+
+```
+ $ cd Ansinpack/ansible
+ # assume the landing host is Centos. You may need to change ansible roles
+ $ ansible-playbook -i 'LANDING_HOST,' landing.xml  
+```
+
+### 3 Set up Jenkins hook and job
+
+See here.
+
+### 4 Create Docker base image
+
+The base image makes us install and test faster becuase Docker container can start really quickly.
+As we are using github hook, create the branch named 'base/description'. 'base' is required.
+
+```
+$ git checkout –b base/first_test  # you can use '/' to put comment
+```
+
+Then, edit base.xml to have necessary packages.
+
+```
+ # some updates like below
+ $ vi base.xml
+ # Create role if you need
+ $ vi roles/new_role/tasks/main.xml
+ $ git add . 
+ $ git commit 
+ $ git push origin base/first_test
+```
+
+`github push orign base/first_test` kicks scritps/jenkins_job.pl by Jenkins Github hook.
+The job crate base image for you. Once the image created proplery, you see the image 
+
+```
+ (landing_host)$ docker images | grep base
+```
+
+### 5 Create TYPE image on the base image
+
+Type can be webapp, database or others that you want to build the server.
+If you want to create webapp,  ansible/weapp.xml, tests/webapp/* and packer/do-webapp.json are needed.
+
+As the same as creating base, 
+
+```
+$ git checkout –b webapp/now_first_test  # you can use '/' to put comment
+# work on the provisioner config and tests
+$ git push origin webapp/now_first_test
+```
+
+This creates Docker container from Docker base image. And run ansible_play to the docker container and it's tested by Serverspec. Once it's succeeded, you should see the below
+
+```
+ (landing_host) $ docker ps -a | grep webapp
+```
+
+### 6 Create vendor (AWS, DistalOcean or others) image 
+
+Ok, webapp on docker is ok now. let's create the image on vendor, like on digitalocean.
+This is done by simply merge the pull request of the above branches.
+
+```
+ $ git checkout webapp/now_fist_test
+ $ git rebase -i # compress comit
+ $ git push webapp/now_fist_test
+```
+
+Go to Github, then pull request of the branch. After merge this, it push to origin/master, which initiated jenkins_job.pl for master to create vendor image
+
+If you are working on DigitalOcean, you can see the new image created on the web gui or run the below commands.
+
+```
+ (landing_host)$ scripts/doman.pl --show_my_image
+```
       
