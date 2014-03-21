@@ -2,8 +2,8 @@
 - hosts: all 
   remote_user: root
   roles:
-    - iptables-webapp
+    - php-fpm
     - nginx 
-    #- openssl-1.0.1f
-    #- perl5.18.2_system 
+    - mysql 
+    - wordpress-3.8.1
 

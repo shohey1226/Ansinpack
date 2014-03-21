@@ -172,28 +172,36 @@ sub run_branch_process{
         # executing Ansible
         $cmd = "ANSIBLE_CONFIG=ansible/ansible.cfg $ansible -i 'localhost:2222,' ansible/${type}.yml";
         print $cmd, "\n";
-        system($cmd) == 0 or die "Failed to execute: $cmd\n";  
-
-       chdir "tests/$type" or die "Can't cd to tests/${type}: $!\n";
-       $cmd = "TARGET_HOST=localhost TARGET_PORT=2222 ./run.sh";
-       print "chdir to tests/$type and execute: $cmd\n";
-       if (system($cmd) == 0){
-            # stop container
+        if (system($cmd) != 0 ){
+            "Failed to execute: $cmd\n";  
+            "Clean up container(id=$container_id)\n";
             $cmd = "$docker stop $container_id";
-            print $cmd , "\n";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
-            exit 0;
-       }else{
-            # stop container
-            $cmd = "$docker stop $container_id";
-            print $cmd , "\n";
-            system($cmd) == 0 or die "Failed to execute: $cmd\n";  
-
-            # destroy container and image 
             $cmd = "$docker rm $container_id";
-            print $cmd , "\n";
             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
-       }
+            exit 1;
+        }
+
+        chdir "tests/$type" or die "Can't cd to tests/${type}: $!\n";
+        $cmd = "TARGET_HOST=localhost TARGET_PORT=2222 ./run.sh";
+        print "chdir to tests/$type and execute: $cmd\n";
+        if (system($cmd) == 0){
+             # stop container
+             $cmd = "$docker stop $container_id";
+             print $cmd , "\n";
+             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+             exit 0;
+        }else{
+             # stop container
+             $cmd = "$docker stop $container_id";
+             print $cmd , "\n";
+             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+
+             # destroy container and image 
+             $cmd = "$docker rm $container_id";
+             print $cmd , "\n";
+             system($cmd) == 0 or die "Failed to execute: $cmd\n";  
+        }
         
     }
 }

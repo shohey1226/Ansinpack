@@ -1,0 +1,14 @@
+---
+- name: install mysql 
+  yum: name={{ item }} state=latest
+  with_items:
+    - mysql
+    - mysql-server
+- name: start mysqld process
+  service: name=mysqld state=started enabled=yes 
+- name: setup mysql 
+  environment: 
+    MYSQL_ROOT_PASS: "{{ env.MYSQL_ROOT_PASS }}"
+  script: setup_mysql.sh 
+       
+       

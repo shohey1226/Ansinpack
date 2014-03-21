@@ -14,6 +14,7 @@
           "mkdir -p /tmp/ansible-local",
           "mkdir -p /root/.ssh",
           "chmod 755 /root/.ssh",
+          "echo 'NETWORKING=yes' >/etc/sysconfig/network",
           "yum install openssh openssh-clients openssh-server -y",
           "sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config",
           "sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config",
