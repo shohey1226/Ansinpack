@@ -5,8 +5,8 @@
   script: install_wp.sh
 - name: create wordpress database 
   environment: 
-    MYSQL_WP_PASS: "{{ env.MYSQL_WP_PASS }}"
-    MYSQL_ROOT_PASS: "{{ env.MYSQL_ROOT_PASS }}"
+    MYSQL_WP_PASS: "{{ lookup('env', 'MYSQL_WP_PASS') }}"
+    MYSQL_ROOT_PASS: "{{ lookup('env', 'MYSQL_ROOT_PASS') }}"
   script: create_wp_db.sh
 - name: copy wp-config.php
   copy: src=wp-config.php dest=/var/www/wordpress/wp-config.php mode=0644 force=yes

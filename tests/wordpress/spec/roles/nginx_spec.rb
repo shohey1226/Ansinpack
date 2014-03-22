@@ -4,7 +4,12 @@ describe package('nginx') do
   it { should be_installed }
 end
 
-#describe command('/usr/bin/openssl version') do
-#    it { should return_stdout 'OpenSSL 1.0.1e-fips 11 Feb 2013' }
-#end
+describe port(80) do
+      it { should be_listening }
+end
+
+describe service('nginx') do
+  it { should be_enabled }
+end
+
 
