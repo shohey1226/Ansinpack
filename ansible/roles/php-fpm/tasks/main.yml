@@ -1,0 +1,7 @@
+---
+- name: install php
+  yum: name=php
+- name: install php-fpm 
+  yum: name=php-fpm state=latest
+- name: start php-fpm and boot enabled
+  service: name=php-fpm state=started enabled=yes

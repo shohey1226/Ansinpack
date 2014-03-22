@@ -1,0 +1,17 @@
+---
+- name: install wordpress 
+  script: install_wp.sh
+- name: create wordpress database 
+  environment: 
+    MYSQL_WP_PASS: "{{ env.MYSQL_WP_PASS }}"
+    MYSQL_ROOT_PASS: "{{ env.MYSQL_ROOT_PASS }}"
+  script: create_wp_db.sh
+- name: copy wp-config.php
+  file: src=wp-config.php dest=/var/www/wordpress/wp-config.php mode=0644
+  notify: restart mysqld
+- name: copy www.conf to use nginx and restart php-fpm
+  file: src=www.conf dest=/etc/php-fpm.d/www.conf mode=0644 
+  notify: restart php-fpm
+- name: copy nginx default config 
+  file: src=default.conf dest=/etc/nginx/conf.d/default.conf mode=0644
+  notify: restart nginx
