@@ -4,7 +4,7 @@
 - name: create wordpress database 
   environment: 
     MYSQL_WP_PASS: "{{ env.MYSQL_WP_PASS }}"
-    MYSQL_ROOT_PASS: "{{ env.MYSQL_WP_PASS }}"
+    MYSQL_ROOT_PASS: "{{ env.MYSQL_ROOT_PASS }}"
   script: create_wp_db.sh
 - name: copy wp-config.php
   file: src=wp-config.php dest=/var/www/wordpress/wp-config.php mode=0644
