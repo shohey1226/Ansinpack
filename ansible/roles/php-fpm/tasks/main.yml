@@ -1,7 +1,9 @@
 ---
 - name: install php
-  yum: name=php
-- name: install php-fpm 
-  yum: name=php-fpm state=latest
+  yum: name={{ item }} state=latest
+  with_items:
+    - php 
+    - php-fpm 
+    - php-mysql
 - name: start php-fpm and boot enabled
   service: name=php-fpm state=started enabled=yes

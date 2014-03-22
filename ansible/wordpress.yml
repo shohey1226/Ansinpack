@@ -2,6 +2,7 @@
 - hosts: all 
   remote_user: root
   roles:
+    - iptables-wp 
     - php-fpm
     - nginx 
     - mysql 

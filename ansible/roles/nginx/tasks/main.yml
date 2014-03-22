@@ -5,5 +5,10 @@
   yum: name=nginx state=latest
 - name: start nginx process
   service: name=nginx state=started enabled=yes
+- name: copy monit config for nginx
+  copy: src=monit.nginx dest=/etc/monit.d/nginx force=yes
+  notify: restart monit
+
+
    
        

@@ -8,7 +8,7 @@
   service: name=mysqld state=started enabled=yes 
 - name: setup mysql 
   environment: 
-    MYSQL_ROOT_PASS: "{{ env.MYSQL_ROOT_PASS }}"
+    MYSQL_ROOT_PASS: "{{ lookup('env', 'MYSQL_ROOT_PASS') }}"
   script: setup_mysql.sh 
        
        
