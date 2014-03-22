@@ -3,8 +3,8 @@
 echo "cd /tmp"
 cd /tmp
 
-echo "wget wordpress*.tar.gz"
-wget http://ja.wordpress.org/wordpress-3.8.1-ja.tar.gz
+#echo "wget wordpress*.tar.gz"
+#wget http://ja.wordpress.org/wordpress-3.8.1-ja.tar.gz
 
 echo "unarchive it";
 tar xzf wordpress-3.8.1-ja.tar.gz

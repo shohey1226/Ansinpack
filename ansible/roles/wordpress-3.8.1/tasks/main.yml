@@ -1,4 +1,6 @@
 ---
+- name: download wordpress package
+  get_url: url=http://ja.wordpress.org/wordpress-3.8.1-ja.tar.gz dest=/tmp/wordpress-3.8.1-ja.tar.gz
 - name: install wordpress 
   script: install_wp.sh
 - name: create wordpress database 
