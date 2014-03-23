@@ -118,11 +118,13 @@ sub run_branch_process{
 
         # Create docker image
         $cmd = "$docker import - ${base_image_repo} < /tmp/$image_name";
+        print "Execute: $cmd\n";
         $base_image_id = `$cmd`; 
         die "Failed to execute: $cmd" if ($base_image_id eq ''); 
 
         # Run the image 
         $cmd = "$docker run -d --name base${epoch}-${git_commit} -p 2222:22 ${base_image_repo}:latest /usr/sbin/sshd -D";
+        print "Execute: $cmd\n";
         my $container_id = `$cmd`;
         die "Failed to execute : $cmd" if ($container_id eq '');
 
