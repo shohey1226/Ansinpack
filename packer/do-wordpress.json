@@ -34,6 +34,7 @@
       "type": "ansible-local",
       "playbook_file": "ansible/wordpress.yml",
       "role_paths": [
+          "ansible/roles/iptables-wp",
           "ansible/roles/php-fpm",
           "ansible/roles/mysql",
           "ansible/roles/nginx",
