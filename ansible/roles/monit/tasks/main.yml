@@ -3,3 +3,5 @@
   shell: rpm -ivh --force http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm 
 - name: install nginx 
   yum: name=monit state=latest
+- name: copy monit.conf
+  copy: src=monit.conf dest=/etc/monit.conf force=yes
