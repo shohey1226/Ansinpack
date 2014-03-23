@@ -12,6 +12,6 @@
   script: setup_mysql.sh 
 - name: setup monit
   copy: src=monit.mysqld dest=/etc/monit.d/mysqld force=yes
-  noitfy: restart monit
+  notify: restart monit
        
        
