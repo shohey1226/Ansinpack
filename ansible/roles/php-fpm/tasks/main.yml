@@ -7,3 +7,6 @@
     - php-mysql
 - name: start php-fpm and boot enabled
   service: name=php-fpm state=started enabled=yes
+- name: copy monit config and restart
+  copy: src=monit.php-fpm dest=/etc/monit.d/php-fpm
+  notify: restart monit

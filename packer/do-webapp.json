@@ -25,7 +25,8 @@
       "type": "ansible-local",
       "playbook_file": "ansible/base.yml",
       "role_paths": [
-          "ansible/roles/adduser_github_pubkey"
+          "ansible/roles/adduser_github_pubkey",
+          "ansible/roles/monit"
       ],
       "staging_directory": "/tmp/ansible-local"
     },
