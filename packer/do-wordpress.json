@@ -2,6 +2,8 @@
   "variables": {
     "do_api_key": "{{env `DIGITALOCEAN_API_KEY`}}",
     "do_client_id": "{{env `DIGITALOCEAN_CLIENT_ID`}}",
+    "mysql_root_pass": "{{env `MYSQL_ROOT_PASS`}}",
+    "mysql_wp_pass": "{{env `MYSQL_WP_PASS`}}",
     "snapshot_name": ""
   },
   "provisioners": [
@@ -14,6 +16,8 @@
           "sudo sed -e '/mpz_powm_sec/I s/^/# /' < /usr/lib64/python2.6/site-packages/Crypto/Util/number.py > /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new",
           "sudo mv -f /usr/lib64/python2.6/site-packages/Crypto/Util/number.py.new /usr/lib64/python2.6/site-packages/Crypto/Util/number.py",
           "mkdir -p /tmp/ansible-local"
+          "export {{ user `do_api_key` }}
+
       ]
     },
     {
@@ -33,6 +37,7 @@
     {
       "type": "ansible-local",
       "playbook_file": "ansible/wordpress.yml",
+      "command": "MYSQL_ROOT_PASS={{ user `mysql_root_pass`}} MYSQL_WP_PASS={{ user `mysql_wp_pass` }} ansible-playbook", 
       "role_paths": [
           "ansible/roles/iptables-wp",
           "ansible/roles/php-fpm",
